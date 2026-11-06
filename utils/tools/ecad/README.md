@@ -1,0 +1,85 @@
+# OpenHornet ECAD utilities
+
+## Windows KiCad 10 setup
+
+After installing KiCad 10, initialize its built-in symbol and footprint libraries and close all KiCad applications. In a complete OpenHornet checkout, double-click `Setup-OpenHornetKiCad.bat`. It runs `Set-OpenHornetKiCadPaths.ps1`, shows the results and pauses before closing. Reopen KiCad after setup succeeds.
+
+The PowerShell utility configures all four `KICAD_USER_OH_*` paths (symbols, footprints, 3D models and drawing templates), registers all six shared symbol libraries and `OH_Footprints`, and repairs existing shared-library entries in project tables under `ECAD`. It requires PowerShell 5.1 or newer. For a preview or direct execution from the repository root:
+
+```powershell
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\utils\tools\ecad\Set-OpenHornetKiCadPaths.ps1 -WhatIf
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\utils\tools\ecad\Set-OpenHornetKiCadPaths.ps1
+```
+
+The script preserves unrelated preferences and library entries. It backs up every changed file in the KiCad configuration folder with a restore manifest, checks for concurrent changes and attempts rollback if a later write fails. It supports `-Checkout` and `-ConfigDirectory`, detects external environment overrides and makes no changes when setup already matches. Project mapping repairs appear in `git diff`; review them before committing. See the [setup guide](../../../ECAD/docs/SYMBOL_LIBRARIES.md#windows-path-setup-script) for configuration discovery, restore instructions and verification. No administrator rights, Codex or Konnect are required.
+
+If an older copy reports a `ConvertFrom-Json` error about keys such as `a` and `A`, update the setup script and rerun it. The current utility preserves case-sensitive preference keys with Windows PowerShell 5.1 and PowerShell 7.
+
+Maintainers can run the disposable regression tests with Python 3 and PowerShell:
+
+```powershell
+python .\utils\tools\ecad\tests\test_kicad_setup.py
+```
+
+The tests prefer `powershell.exe` on Windows, otherwise `pwsh`. Set `OH_TEST_POWERSHELL` to test a particular executable. Close KiCad before running them.
+
+## Astra launch utilities
+
+These wrappers implement the operator modes defined by `ECAD/docs/requirements/TOOLCHAIN.md`.
+
+- `./preflight audit` — read-only workstation/repository/library/MCP checks. Audits may run on the default branch.
+- `./preflight design` — stricter checks for a mutation session. Refuses `master`/`main`, detached HEAD, missing toolchain/library mappings, and a dirty working tree unless `OH_ALLOW_DIRTY=1` explicitly acknowledges intentional scoped work.
+- `./astra-audit [prompt]` — CLI convenience wrapper that runs preflight and starts GPT-6 Astra/Codex with `approval=never` and `sandbox=read-only`.
+- `./astra-design [prompt]` — CLI convenience wrapper that runs preflight and starts GPT-6 Astra/Codex with `approval=on-request` and `sandbox=workspace-write`.
+
+`OH_ASTRA_MODEL` may override the default `gpt-6-astra` model identifier. The launchers do not install, update or reconfigure Codex, Konnect or KiCad; follow `TOOLCHAIN.md` for setup and smoke tests.
+
+On the validated Fedora reference environment, `preflight` also verifies KiCad's `KICAD_USER_OH_*` variables resolve to the current Git checkout. This intentionally prevents a Git worktree from silently using libraries from another checkout. Other platforms must perform equivalent library-resolution verification until that check is made portable.
+
+The shared-library check requires nonempty `OH_Symbols.kicad_symdir`, `KiCadCustomLib.kicad_symdir`, `OH_Interconnect.kicad_symdir` and `OpenHornet.kicad_symdir` directories. Retained packed comparison copies do not satisfy these checks. `ABSIS` and `Arduino Pro Mini 5v` remain packed libraries. Use KiCad 10 and follow the [symbol library mapping and verification guide](../../../ECAD/docs/SYMBOL_LIBRARIES.md) after pulling the migration.
+
+## CLI usage
+
+Example design session:
+
+```bash
+git switch -c pcb/example-change
+utils/tools/ecad/astra-design
+```
+
+To resume a deliberate in-progress task that already has uncommitted ECAD changes:
+
+```bash
+OH_ALLOW_DIRTY=1 utils/tools/ecad/astra-design
+```
+
+Do not use `OH_ALLOW_DIRTY=1` to hide unrelated local work.
+
+## ChatGPT Desktop / graphical Codex
+
+The 2026-09-11 roci reference setup also passed the read-only OpenHornet/Konnect smoke test through ChatGPT Desktop/Codex using the same `~/.codex/config.toml` Konnect MCP registration as the CLI. For OpenHornet ECAD work, open the canonical checkout as a **Local** project, not a Codex-managed worktree, until shared KiCad library mappings are project-relative.
+
+When using the desktop app, do not launch `astra-audit` or `astra-design` merely to create another nested Codex session. Run the appropriate repository preflight from the integrated terminal, then continue the task in the existing Astra conversation:
+
+```bash
+utils/tools/ecad/preflight audit
+# or
+utils/tools/ecad/preflight design
+```
+
+Desktop environment Actions are optional convenience UI only. The current autogenerated `.codex/environments/` state is machine-local and ignored by Git; these repo-owned utilities remain the shared authoritative workflow.
+
+## Validated Fedora schematic viewer
+
+The Konnect `schematic-viewer` required two process-local compatibility settings on Fedora 44 KDE/Wayland:
+
+```bash
+export GDK_BACKEND=x11
+export WEBKIT_DISABLE_DMABUF_RENDERER=1
+```
+
+The validated roci installation keeps those variables in a wrapper at `~/.local/bin/schematic-viewer` and preserves the upstream viewer binary as `~/.local/bin/schematic-viewer.real`. Do not export these variables globally.
+
+Konnect 0.11.1 dark theme applies a CSS filter to the rendered SVG and was visibly blurry when zoomed under the validated WebKitGTK path. Light theme retained crisp vector rendering and is the recommended viewer mode for this reference environment.
+
+The desktop application is optional. CLI Astra/Codex plus Konnect, KiCad and the repository launch utilities remain the reproducible fallback and should continue to work independently of desktop UI state.

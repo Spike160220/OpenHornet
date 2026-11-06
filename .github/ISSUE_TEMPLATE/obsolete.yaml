@@ -1,0 +1,168 @@
+name: Obsolescence Report
+description: Report an unavailable or end-of-life purchased component
+title: "[Obsolescence]: "
+labels: ["Type: Obsolescence", "Triage Required"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use this form when a purchased component is unavailable, end-of-life, or otherwise needs a supply-driven replacement.
+
+        If the current design is incorrect or broken for another reason, use Bug Report.
+        If you are proposing a new capability, use Feature / Enhancement Request.
+        If the replacement design already exists and dependent files only need updating, use Maintenance / Cleanup.
+
+  - type: input
+    id: contact
+    attributes:
+      label: Discord Username
+      description: How can we contact you if additional information is required?
+      placeholder: ex. Noctum
+    validations:
+      required: false
+
+  - type: textarea
+    id: summary
+    attributes:
+      label: Obsolescence Summary
+      description: Summarize the availability or lifecycle problem and its impact.
+    validations:
+      required: true
+
+  - type: input
+    id: manufacturer
+    attributes:
+      label: Manufacturer
+      description: Who manufactures the affected component?
+      placeholder: ex. Omron
+    validations:
+      required: true
+
+  - type: input
+    id: applicable-cots-part-number
+    attributes:
+      label: COTS Manufacturer Part Number
+      description: Enter the exact manufacturer part number of the affected commercial item.
+      placeholder: ex. B3F-4055
+    validations:
+      required: true
+
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Obsolescence / Availability Evidence
+      description: Link manufacturer notices, authorized distributor listings, lifecycle data, or other evidence.
+      placeholder: Include URLs, screenshots, dates checked, and known remaining stock where available.
+    validations:
+      required: true
+
+  - type: textarea
+    id: applicable-oh-items
+    attributes:
+      label: Affected OpenHornet Parts / Files / Assemblies
+      description: Identify every known OpenHornet part, assembly, BOM, PCB, drawing, file, or directory that uses this component.
+      placeholder: ex. OH02A5-136, ABSIS_ALE+, ECAD/..., or MCAD/...
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposed-replacements
+    attributes:
+      label: Proposed Replacement(s)
+      description: List candidate manufacturer part numbers, suppliers, availability, and relevant technical differences. Enter Unknown if no replacement has been identified.
+    validations:
+      required: true
+
+  - type: dropdown
+    id: replacement-type
+    attributes:
+      label: Replacement Scope
+      description: How much design change is expected?
+      options:
+        - Drop-in replacement
+        - Minor design change
+        - Major redesign required
+        - Replacement scope unknown
+    validations:
+      required: true
+
+  - type: dropdown
+    id: physical-test
+    attributes:
+      label: Physical Test Status
+      description: Has a proposed replacement been physically tested?
+      options:
+        - Tested and passed
+        - Tested with unresolved issues
+        - Testing in progress
+        - Not tested
+        - No replacement identified
+    validations:
+      required: true
+
+  - type: dropdown
+    id: version
+    attributes:
+      label: Applicable Version / Branch
+      description: Which release or development branch is affected?
+      options:
+        - Current master / next release
+        - v0.3.0
+        - v0.2.0
+        - Older release
+        - Not release-specific
+    validations:
+      required: true
+
+  - type: dropdown
+    id: category
+    attributes:
+      label: Category
+      description: Which repository areas are affected? Select all that apply.
+      multiple: true
+      options:
+        - MCAD / Mechanical
+        - ECAD / Electrical
+        - Artwork
+        - Drawings / Documentation
+        - Repository / Tooling / CI
+        - Other
+    validations:
+      required: true
+
+  - type: dropdown
+    id: end-item
+    attributes:
+      label: Applicable End Item(s)
+      description: Which end items are affected? Select all that apply.
+      multiple: true
+      options:
+        - Top Level Assembly (TLA)
+        - Upper Instrument Panel (UIP)
+        - Lower Instrument Panel (LIP)
+        - Center Tub (CT)
+        - Left Console (LCON)
+        - Right Console (RCON)
+        - Flight Stick
+        - Throttle
+        - Multiple / Repository-wide
+        - Not end-item-specific
+        - Other
+    validations:
+      required: true
+
+  - type: textarea
+    id: images
+    attributes:
+      label: Screenshots / Images / Files
+      description: Add lifecycle notices, distributor screenshots, datasheets, photos, or other supporting material.
+    validations:
+      required: false
+
+  - type: textarea
+    id: misc
+    attributes:
+      label: Additional Information
+      description: Include sourcing constraints, design risks, related issues or PRs, and anything not covered above.
+    validations:
+      required: false

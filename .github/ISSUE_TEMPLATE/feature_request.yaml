@@ -1,0 +1,133 @@
+name: Feature / Enhancement Request
+description: Propose a new capability or intentional improvement to OpenHornet
+title: "[Enhancement]: "
+labels: ["Type: Enhancement", "Triage Required"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use this form to propose new functionality or an intentional change to an OpenHornet design.
+
+        If something is currently incorrect or broken, use Bug Report.
+        If an existing design is being synchronized, migrated, cleaned up, or standardized, use Maintenance / Cleanup.
+        If a purchased component is obsolete or unavailable, use Obsolescence Report.
+
+  - type: input
+    id: contact
+    attributes:
+      label: Discord Username
+      description: How can we contact you if additional information is required?
+      placeholder: ex. Noctum
+    validations:
+      required: false
+
+  - type: textarea
+    id: summary
+    attributes:
+      label: Feature / Enhancement Summary
+      description: What new capability or intentional change are you proposing?
+      placeholder: Describe the desired improvement.
+    validations:
+      required: true
+
+  - type: textarea
+    id: justification
+    attributes:
+      label: Justification
+      description: Why would this improve OpenHornet?
+      placeholder: Explain whether it improves capability, fidelity, reliability, manufacturability, cost, usability, or maintainability.
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposed-solution
+    attributes:
+      label: Proposed Solution
+      description: Describe the preferred implementation, if known, along with alternatives or tradeoffs considered.
+    validations:
+      required: false
+
+  - type: textarea
+    id: affected-items
+    attributes:
+      label: Affected Parts / Files / Assemblies
+      description: List applicable part numbers, assemblies, PCB names, drawings, files, or directories. Enter Not yet known if the scope has not been determined.
+      placeholder: ex. OH02A5-136, ABSIS_ALE+, ECAD/..., MCAD/..., or Not yet known
+    validations:
+      required: false
+
+  - type: dropdown
+    id: version
+    attributes:
+      label: Applicable Version / Branch
+      description: Which release or development branch would receive this change?
+      options:
+        - Current master / next release
+        - v0.3.0
+        - v0.2.0
+        - Older release
+        - Not release-specific
+    validations:
+      required: true
+
+  - type: dropdown
+    id: category
+    attributes:
+      label: Category
+      description: Which repository areas are affected? Select all that apply.
+      multiple: true
+      options:
+        - MCAD / Mechanical
+        - ECAD / Electrical
+        - Artwork
+        - Drawings / Documentation
+        - Repository / Tooling / CI
+        - Other
+    validations:
+      required: true
+
+  - type: dropdown
+    id: end-item
+    attributes:
+      label: Applicable End Item(s)
+      description: Which end items are affected? Select all that apply.
+      multiple: true
+      options:
+        - Top Level Assembly (TLA)
+        - Upper Instrument Panel (UIP)
+        - Lower Instrument Panel (LIP)
+        - Center Tub (CT)
+        - Left Console (LCON)
+        - Right Console (RCON)
+        - Flight Stick
+        - Throttle
+        - Multiple / Repository-wide
+        - Not end-item-specific
+        - Other
+    validations:
+      required: true
+
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Acceptance Criteria
+      description: What must be true for this enhancement to be considered complete?
+      placeholder: Describe measurable design, build, test, documentation, or review outcomes.
+    validations:
+      required: false
+
+  - type: textarea
+    id: images
+    attributes:
+      label: Screenshots / Images / Files
+      description: Add sketches, annotated screenshots, photos, CAD files, references, or other supporting material.
+    validations:
+      required: false
+
+  - type: textarea
+    id: misc
+    attributes:
+      label: Additional Information
+      description: Link related issues, pull requests, requirements, or discussions and add anything not covered above.
+    validations:
+      required: false

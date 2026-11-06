@@ -1,0 +1,47 @@
+# Trusted second stage: reads only JSON/text artifacts and GitHub metadata.
+# No contributor source code is checked out or executed with write permissions.
+name: ECAD Review PR Comment
+
+on:
+  workflow_run:
+    workflows: ["ECAD Review (experimental)"]
+    types: [completed]
+
+permissions:
+  actions: read
+  contents: write # Only the trusted publisher can write safe JPEG assets
+  issues: write
+  pull-requests: write
+
+jobs:
+  publish:
+    name: Post ECAD findings on original PR
+    if: ${{ github.event.workflow_run.event == 'pull_request' || github.event.workflow_run.event == 'workflow_dispatch' }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - name: Checkout trusted commenter from default branch
+        uses: actions/checkout@v6
+        with:
+          ref: ${{ github.event.repository.default_branch }}
+          fetch-depth: 1
+          persist-credentials: false
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /utils/tools/ecad/ci/post_review_comment.py
+            /utils/tools/ecad/ci/publish_previews.py
+
+      - name: Install safe JPEG decoder
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y --no-install-recommends python3-pil
+
+      - name: Publish GitHub-renderable ECAD thumbnails
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: python3 utils/tools/ecad/ci/publish_previews.py
+
+      - name: Upsert ECAD review summary and artifact links
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: python3 utils/tools/ecad/ci/post_review_comment.py

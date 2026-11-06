@@ -1,0 +1,144 @@
+name: Bug Report
+description: Report something incorrect or broken in the current OpenHornet design, documentation, or build
+title: "[Bug]: "
+labels: ["Type: Bug", "Triage Required"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use this form when something in the current OpenHornet design, documentation, or build is incorrect or broken.
+
+        For repository synchronization, migration, cleanup, or standardization work, use Maintenance / Cleanup.
+        For a new capability or intentional design change, use Feature / Enhancement Request.
+        For an unavailable or end-of-life purchased component, use Obsolescence Report.
+
+  - type: input
+    id: contact
+    attributes:
+      label: Discord Username
+      description: How can we contact you if additional information is required?
+      placeholder: ex. Noctum
+    validations:
+      required: false
+
+  - type: textarea
+    id: summary
+    attributes:
+      label: Bug Summary
+      description: Summarize the problem and identify where it occurs.
+      placeholder: Describe what is incorrect or broken.
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected-results
+    attributes:
+      label: Expected Results
+      description: What should happen or what should the design show?
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual-results
+    attributes:
+      label: Actual Results
+      description: What actually happens or what does the current design show?
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Steps to Reproduce
+      description: Describe how to reproduce or locate the problem, including applicable files, assemblies, sheets, or build steps.
+      placeholder: |
+        1. Open or build ...
+        2. Inspect or operate ...
+        3. Observe ...
+    validations:
+      required: false
+
+  - type: textarea
+    id: affected-items
+    attributes:
+      label: Affected Parts / Files / Assemblies
+      description: List applicable OpenHornet part numbers, assemblies, PCB names, drawings, files, or directories.
+      placeholder: ex. OH02A5-136, ABSIS_ALE+, ECAD/..., or MCAD/...
+    validations:
+      required: true
+
+  - type: dropdown
+    id: version
+    attributes:
+      label: Applicable Version / Branch
+      description: Which release or development branch is affected?
+      options:
+        - Current master / next release
+        - v0.3.0
+        - v0.2.0
+        - Older release
+        - Not release-specific
+    validations:
+      required: true
+
+  - type: dropdown
+    id: category
+    attributes:
+      label: Category
+      description: Which repository areas are affected? Select all that apply.
+      multiple: true
+      options:
+        - MCAD / Mechanical
+        - ECAD / Electrical
+        - Artwork
+        - Drawings / Documentation
+        - Repository / Tooling / CI
+        - Other
+    validations:
+      required: true
+
+  - type: dropdown
+    id: end-item
+    attributes:
+      label: Applicable End Item(s)
+      description: Which end items are affected? Select all that apply.
+      multiple: true
+      options:
+        - Top Level Assembly (TLA)
+        - Upper Instrument Panel (UIP)
+        - Lower Instrument Panel (LIP)
+        - Center Tub (CT)
+        - Left Console (LCON)
+        - Right Console (RCON)
+        - Flight Stick
+        - Throttle
+        - Multiple / Repository-wide
+        - Not end-item-specific
+        - Other
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: built-to-print
+    attributes:
+      label: Built to Print?
+      description: If this was found during a physical build, select the statement that applies and describe any deviations below.
+      options:
+        - label: I built or attempted to build the part to the OpenHornet print without deviations.
+        - label: I deviated from the OpenHornet print and have documented the deviations below.
+
+  - type: textarea
+    id: images
+    attributes:
+      label: Screenshots / Images / Files
+      description: Add annotated screenshots, photos, drawings, CAD exports, logs, or other evidence that helps explain the problem.
+    validations:
+      required: false
+
+  - type: textarea
+    id: misc
+    attributes:
+      label: Additional Information
+      description: Include model or software versions, build deviations, related issues or PRs, and anything not covered above.
+    validations:
+      required: false
